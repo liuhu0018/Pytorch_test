@@ -32,7 +32,7 @@ for epoch in range(1000):
 print('w = ', model.linear.weight.item())
 print('b = ', model.linear.bias.item())
 
-# test model test
+# test model
 x_test = torch.Tensor([[4.0]])
 y_test = model(x_test)
 print('y_pred = ', y_test.data)
