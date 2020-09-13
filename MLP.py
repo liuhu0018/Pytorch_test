@@ -2,8 +2,9 @@ import pandas as pd
 import torch
 import matplotlib.pyplot as plt
 import torch.utils.data as Data
+from torch.utils.tensorboard import SummaryWriter
 
-data = pd.read_excel('C:\\Users\\80232\\Documents\\data\\data.xlsx')
+data = pd.read_excel('C:\\Users\\80232\\Documents\\data\\data1.xlsx')
 BATCH_SIZE = 25
 x_ = pd.DataFrame(data, columns=['X', 'Y']).values
 x = torch.FloatTensor(x_)
@@ -27,21 +28,23 @@ load = Data.DataLoader(dataset=dataset,
                        shuffle=True)
 model = torch.nn.Sequential(
     # torch.nn.BatchNorm1d(2),
-    torch.nn.Linear(2, 16),
+    torch.nn.Linear(2, 32),
     # torch.nn.BatchNorm1d(48),
     torch.nn.ReLU(),
-    torch.nn.Linear(16, 8),
-    torch.nn.ReLU(),
-    # torch.nn.Linear(500, 8),
+    # torch.nn.Linear(128, 64),
     # torch.nn.ReLU(),
+    # torch.nn.Linear(64, 32),
+    # torch.nn.ReLU(),
+    torch.nn.Linear(32, 8),
+    torch.nn.ReLU(),
     torch.nn.Linear(8, 2),
     # torch.nn.BatchNorm1d(2)
 )
 # print(model)
 # model.to(device)
-
+writer = SummaryWriter()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
-loss_func = torch.nn.L1Loss()
+loss_func = torch.nn.MSELoss()
 epoch_list = []
 loss_list = []
 
@@ -56,11 +59,15 @@ for epoch in range(2000):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+    writer.add_scalar(' Loss/train',loss, epoch)
+    writer.add_scalar(' Loss/test', loss, epoch)
     print("Epoch:{}, Loss:{:.4f}".format(epoch, loss.data.item()))
 
+# torch.save(model.state_dict(), 'net_params.pkl')
+
 print(model(x_test))
-plt.plot(epoch_list, loss_list)
-plt.xlabel('epoch')
-plt.ylabel('loss')
-plt.grid()
-plt.show()
+# plt.plot(epoch_list, loss_list)
+# plt.xlabel('epoch')
+# plt.ylabel('loss')
+# plt.grid()
+# plt.show()

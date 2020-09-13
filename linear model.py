@@ -1,4 +1,4 @@
-import numpy as np
+import numpy_test as np
 import matplotlib.pyplot as plt
 
 x_data = [1.0, 2.0, 3.0]

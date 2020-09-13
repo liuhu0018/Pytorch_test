@@ -1,4 +1,4 @@
-import numpy as np
+import numpy_test as np
 import torch
 from torch.utils.data import Dataset, DataLoader  # dataset (abstract class)
 
