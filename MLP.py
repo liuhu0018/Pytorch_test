@@ -8,11 +8,11 @@ data = pd.read_excel('C:\\Users\\80232\\Documents\\data\\data1.xlsx')
 BATCH_SIZE = 25
 x_ = pd.DataFrame(data, columns=['X', 'Y']).values
 x = torch.FloatTensor(x_)
-x = torch.autograd.Variable(x, requires_grad=False)
+# x = torch.autograd.Variable(x, requires_grad=False)
 # print(x.shape)
 y_ = pd.DataFrame(data, columns=['pwm1', 'pwm2']).values
 y = torch.FloatTensor(y_)
-y = torch.autograd.Variable(y, requires_grad=False)
+# y = torch.autograd.Variable(y, requires_grad=False)
 x_train = x[:-2]
 y_train = y[:-2]
 x_test = x[-6:]
@@ -59,7 +59,7 @@ for epoch in range(2000):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-    writer.add_scalar(' Loss/train',loss, epoch)
+    writer.add_scalar(' Loss/train', loss, epoch)
     writer.add_scalar(' Loss/test', loss, epoch)
     print("Epoch:{}, Loss:{:.4f}".format(epoch, loss.data.item()))
 
