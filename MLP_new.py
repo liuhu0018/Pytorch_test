@@ -6,18 +6,18 @@ from torch.utils.tensorboard import SummaryWriter
 
 BATCH_SIZE = 25
 xy = np.loadtxt('data1.csv', delimiter=',', dtype=np.float32)
-y_train = torch.from_numpy(xy[:50, :-2])
-x_train = torch.from_numpy(xy[:50, -2:])
+y_train = torch.from_numpy(xy[:140, :-2])
+x_train = torch.from_numpy(xy[:140, -2:])
 y_test = torch.from_numpy(xy[-20:, :-2])
 x_test = torch.from_numpy(xy[-20:, -2:])
-print(x_train)
+print(x_train.dtype)
 print(y_train)
 print(x_test)
 print(y_test)
 dataset_train = Data.TensorDataset(x_train, y_train)
 dataset_test = Data.TensorDataset(x_test, y_test)
 train_loader = Data.DataLoader(dataset=dataset_train,
-                               batch_size=BATCH_SIZE,
+                               batch_size=25,
                                shuffle=True)
 test_loader = Data.DataLoader(dataset=dataset_test,
                               batch_size=20,
@@ -36,8 +36,8 @@ model = nn.Sequential(
 )
 
 writer = SummaryWriter()
-criterion = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+criterion = nn.L1Loss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 epoch_list = []
 loss_list = []
 
@@ -68,6 +68,6 @@ def test():
 
 
 if __name__ == '__main__':
-    for epoch in range(2000):
+    for epoch in range(5000):
         train()
         test()
