@@ -4,20 +4,20 @@ import torch.nn as nn
 import torch.utils.data as Data
 from torch.utils.tensorboard import SummaryWriter
 
-BATCH_SIZE = 25
+# BATCH_SIZE = 2
 xy = np.loadtxt('data1.csv', delimiter=',', dtype=np.float32)
 y_train = torch.from_numpy(xy[:140, :-2])
 x_train = torch.from_numpy(xy[:140, -2:])
 y_test = torch.from_numpy(xy[-20:, :-2])
 x_test = torch.from_numpy(xy[-20:, -2:])
-print(x_train.dtype)
+print(x_train)
 print(y_train)
 print(x_test)
 print(y_test)
 dataset_train = Data.TensorDataset(x_train, y_train)
 dataset_test = Data.TensorDataset(x_test, y_test)
 train_loader = Data.DataLoader(dataset=dataset_train,
-                               batch_size=25,
+                               batch_size=20,
                                shuffle=True)
 test_loader = Data.DataLoader(dataset=dataset_test,
                               batch_size=20,
@@ -34,10 +34,10 @@ model = nn.Sequential(
     nn.ReLU(),
     nn.Linear(8, 2),
 )
-
-writer = SummaryWriter()
-criterion = nn.L1Loss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+print(model)
+writer = SummaryWriter(comment="128_64_32_8_MSE_Adam_LR_0.01_DATASET_140_BATCH_20")
+criterion = nn.MSELoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 epoch_list = []
 loss_list = []
 
@@ -53,7 +53,7 @@ def train():
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-    writer.add_scalar(' Loss/train', loss, epoch)
+    writer.add_scalar(' Loss/train', loss.item(), epoch)
     print("Epoch:{}, Loss:{:.4f}".format(epoch, loss.data.item()))
 
 
@@ -68,6 +68,8 @@ def test():
 
 
 if __name__ == '__main__':
-    for epoch in range(5000):
+    # model = torch.load('net_params.pkl')
+    for epoch in range(2000):
         train()
         test()
+    torch.save(model.state_dict(), 'net_params.pkl')
