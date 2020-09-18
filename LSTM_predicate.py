@@ -1,15 +1,16 @@
-from MLP_new import model
+from LSTM_new import model
 import torch
 
 
 def predicate(x):
-    model.load_state_dict(torch.load('MLP_params.pth'))
+    model.load_state_dict(torch.load('Lstm_params.pth'))
     pred = model(x)
     return pred
 
 
 if __name__ == '__main__':
     with torch.no_grad():
-        x = torch.Tensor([0.132 ,0.743])
+        x = torch.Tensor([0.132 ,0.743]).view(1, 1, 2)
+        print(x.shape)
         result = predicate(x)
         print(result)

@@ -23,18 +23,36 @@ test_loader = Data.DataLoader(dataset=dataset_test,
                               batch_size=20,
                               shuffle=False)
 
-model = nn.Sequential(
-    nn.Linear(2, 128),
-    nn.ReLU(),
-    nn.Linear(128, 64),
-    nn.ReLU(),
-    nn.Linear(64, 32),
-    nn.ReLU(),
-    nn.Linear(32, 8),
-    nn.ReLU(),
-    nn.Linear(8, 2),
-)
-print(model)
+
+class Model(nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+        self.lstm = nn.LSTM(input_size=2, hidden_size=40, num_layers=1,batch_first=True)
+        self.conv1d = nn.Conv1d(40, 40, kernel_size=1)
+        self.linear1 = nn.Linear(40, 4)
+        self.relu = nn.ReLU()
+        self.linear2 = nn.Linear(4, 2)
+
+    def forward(self, x):
+        x, _ = self.lstm(x)
+        # x = x.squeeze(1)
+        # print(x)
+        # print(x.shape)
+        x = x.permute(0, 2, 1)
+        x = self.conv1d(x)
+        # print(x.shape)
+        # print(x)
+        x = x.squeeze(2)
+        # # print(x.shape)
+        x = self.relu(self.linear1(x))
+        x = self.linear2(x)
+        # print(x.shape)
+        return x
+
+
+model = Model()
+
+writer = SummaryWriter(comment="LSTM_MSE_Adam_LR_0.01_DATASET_140_BATCH_20")
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 epoch_list = []
@@ -45,7 +63,11 @@ def train():
     for step, (x_train, y_train) in enumerate(train_loader):
         # x_train = x_train.to(device)
         # y_train = y_train.to(device)
+        x_train = x_train.unsqueeze(1)
         y_pred = model(x_train)
+        # print(y_pred.shape)
+        # print('x_train',x_train.shape)
+        # print('y_train',y_train.shape)
         loss = criterion(y_pred, y_train)
         epoch_list.append(epoch)
         loss_list.append(loss.item())
@@ -60,16 +82,17 @@ def test():
     with torch.no_grad():
         for data in test_loader:
             x_test, y_test = data
+            x_test = x_test.unsqueeze(1)
             y_pred = model(x_test)
             acc = torch.mean(1 - torch.abs(y_pred.data - y_test) / y_test)
         writer.add_scalar(' Acc/test', acc, epoch)
         print("Epoch:{}, Acc:{:.4f}".format(epoch, acc))
 
 
+
 if __name__ == '__main__':
-    writer = SummaryWriter(comment="128_64_32_8_MSE_Adam_LR_0.01_DATASET_140_BATCH_20")
-    # model.load_state_dict(torch.load('MLP_params.pth'))
-    for epoch in range(2000):
+    # model.load_state_dict(torch.load('net_params.pth'))
+    for epoch in range(5000):
         train()
         test()
-    torch.save(model.state_dict(), 'MLP_params.pth')
+    # torch.save(model.state_dict(), 'Lstm_params.pth')
