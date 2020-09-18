@@ -10,10 +10,10 @@ y_train = torch.from_numpy(xy[:140, :-2])
 x_train = torch.from_numpy(xy[:140, -2:])
 y_test = torch.from_numpy(xy[-20:, :-2])
 x_test = torch.from_numpy(xy[-20:, -2:])
-print(x_train)
-print(y_train)
-print(x_test)
-print(y_test)
+# print(x_train)
+# print(y_train)
+# print(x_test)
+# print(y_test)
 dataset_train = Data.TensorDataset(x_train, y_train)
 dataset_test = Data.TensorDataset(x_test, y_test)
 train_loader = Data.DataLoader(dataset=dataset_train,
@@ -47,6 +47,7 @@ def train():
         # x_train = x_train.to(device)
         # y_train = y_train.to(device)
         y_pred = model(x_train)
+        print(x_train.shape)
         loss = criterion(y_pred, y_train)
         epoch_list.append(epoch)
         loss_list.append(loss.item())
@@ -67,9 +68,13 @@ def test():
         print("Epoch:{}, Acc:{:.4f}".format(epoch, acc))
 
 
+def test_fun(x, y):
+    return x + y
+
+
 if __name__ == '__main__':
-    # model = torch.load('net_params.pkl')
+    # model.load_state_dict(torch.load('net_params.pth'))
     for epoch in range(2000):
         train()
         test()
-    torch.save(model.state_dict(), 'net_params.pkl')
+    torch.save(model.state_dict(), 'net_params.pth')
