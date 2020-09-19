@@ -27,19 +27,26 @@ test_loader = Data.DataLoader(dataset=dataset_test,
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
-        self.lstm = nn.LSTM(input_size=2, hidden_size=40, num_layers=1, batch_first=True)
-        self.conv1d = nn.Conv1d(40, 40, kernel_size=1)
+        # self.lstm = nn.LSTM(input_size=2, hidden_size=40, num_layers=1, batch_first=True)
+        self.gru1 = nn.GRU(input_size=2, hidden_size=40, num_layers=1, batch_first=True)
+        # self.gru2 = nn.GRU(input_size=40, hidden_size=40, num_layers=1, batch_first=True)
+        self.conv1 = nn.Conv1d(40, 40, kernel_size=1)
+        print(self.conv1.weight)
+        nn.init.xavier_uniform_(self.conv1.weight)
+        print(self.conv1.weight)
         # self.linear1 = nn.Linear(40, 4)
         # self.relu = nn.ReLU()
         self.linear2 = nn.Linear(40, 2)
 
     def forward(self, x):
-        x, _ = self.lstm(x)
+        # x, _ = self.lstm(x)
+        x, _ = self.gru1(x)
+        # x, _ = self.gru2(x)
         # x = x.squeeze(1)
         # print(x)
         # print(x.shape)
         x = x.permute(0, 2, 1)
-        x = self.conv1d(x)
+        x = self.conv1(x)
         # print(x.shape)
         # print(x)
         x = x.squeeze(2)
@@ -92,4 +99,4 @@ if __name__ == '__main__':
     for epoch in range(2000):
         train()
         test()
-    torch.save(model.state_dict(), 'Lstm_params.pth')
+    torch.save(model.state_dict(), 'GRU_params.pth')

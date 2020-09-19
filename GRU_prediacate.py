@@ -1,16 +1,15 @@
-from LSTM_new import model
+from GRU import model
 import torch
 
 
 def predicate(x):
-    model.load_state_dict(torch.load('Lstm_params.pth'))
+    model.load_state_dict(torch.load('GRU_params.pth'))
     pred = model(x)
     return pred
 
 
 if __name__ == '__main__':
     with torch.no_grad():
-        x = torch.Tensor([0.434 ,0.553]).view(1, 1, 2)
-        print(x.shape)
+        x = torch.Tensor([0.370 ,0.935 ]).view(1, 1, 2)
         result = predicate(x)
         print(result)
