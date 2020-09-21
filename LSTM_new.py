@@ -92,4 +92,4 @@ if __name__ == '__main__':
     for epoch in range(2000):
         train()
         test()
-    torch.save(model.state_dict(), 'Lstm_params.pth')
+    # torch.save(model.state_dict(), 'Lstm_params.pth')
