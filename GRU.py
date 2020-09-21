@@ -31,9 +31,7 @@ class Model(nn.Module):
         self.gru1 = nn.GRU(input_size=2, hidden_size=40, num_layers=1, batch_first=True)
         # self.gru2 = nn.GRU(input_size=40, hidden_size=40, num_layers=1, batch_first=True)
         self.conv1 = nn.Conv1d(40, 40, kernel_size=1)
-        print(self.conv1.weight)
         nn.init.xavier_uniform_(self.conv1.weight)
-        print(self.conv1.weight)
         # self.linear1 = nn.Linear(40, 4)
         # self.relu = nn.ReLU()
         self.linear2 = nn.Linear(40, 2)
@@ -58,7 +56,7 @@ class Model(nn.Module):
 
 
 model = Model()
-writer = SummaryWriter(comment="LSTM_MSE_Adam_LR_0.01_DATASET_140_BATCH_20")
+writer = SummaryWriter(comment="GRU_MSE_Adam_LR_0.01_DATASET_140_BATCH_16_init")
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 epoch_list = []
@@ -99,4 +97,4 @@ if __name__ == '__main__':
     for epoch in range(2000):
         train()
         test()
-    torch.save(model.state_dict(), 'GRU_params.pth')
+    # torch.save(model.state_dict(), 'GRU_params.pth')

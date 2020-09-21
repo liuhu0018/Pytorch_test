@@ -51,7 +51,7 @@ class Model(nn.Module):
 
 
 model = Model()
-writer = SummaryWriter(comment="LSTM_MSE_Adam_LR_0.01_DATASET_140_BATCH_20")
+writer = SummaryWriter(comment="LSTM_MSE_Adam_LR_0.01_DATASET_140_BATCH_16")
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 epoch_list = []
