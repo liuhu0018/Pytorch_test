@@ -5,11 +5,11 @@ import torch.utils.data as Data
 from torch.utils.tensorboard import SummaryWriter
 
 BATCH_SIZE = 16
-xy = np.loadtxt('data1.csv', delimiter=',', dtype=np.float32)
-y_train = torch.from_numpy(xy[:140, :-2])
-x_train = torch.from_numpy(xy[:140, -2:])
-y_test = torch.from_numpy(xy[-20:, :-2])
-x_test = torch.from_numpy(xy[-20:, -2:])
+xy = np.loadtxt('train.csv', delimiter=',', dtype=np.float32)
+y_train = torch.from_numpy(xy[:360, :-3])
+x_train = torch.from_numpy(xy[:360, -3:])
+y_test = torch.from_numpy(xy[-30:, :-3])
+x_test = torch.from_numpy(xy[-30:, -3:])
 # print(x_train)
 # print(y_train)
 # print(x_test)
@@ -20,14 +20,14 @@ train_loader = Data.DataLoader(dataset=dataset_train,
                                batch_size=BATCH_SIZE,
                                shuffle=True)
 test_loader = Data.DataLoader(dataset=dataset_test,
-                              batch_size=20,
+                              batch_size=30,
                               shuffle=False)
 
 
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
-        self.lstm = nn.LSTM(input_size=2, hidden_size=40, num_layers=1, batch_first=True)
+        self.lstm = nn.LSTM(input_size=3, hidden_size=40, num_layers=1, batch_first=True)
         self.conv1d = nn.Conv1d(40, 40, kernel_size=1)
         # self.linear1 = nn.Linear(40, 4)
         # self.relu = nn.ReLU()
@@ -51,7 +51,7 @@ class Model(nn.Module):
 
 
 model = Model()
-writer = SummaryWriter(comment="LSTM_MSE_Adam_LR_0.01_DATASET_140_BATCH_16")
+writer = SummaryWriter(comment="LSTM_MSE_Adam_LR_0.01_DATASET_15_BATCH_1")
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 epoch_list = []

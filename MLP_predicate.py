@@ -10,6 +10,7 @@ def predicate(x):
 
 if __name__ == '__main__':
     with torch.no_grad():
-        x = torch.Tensor([0.132 ,0.743])
+        x = torch.Tensor([0.498402556,0.291964286,1])
         result = predicate(x)
         print(result)
+

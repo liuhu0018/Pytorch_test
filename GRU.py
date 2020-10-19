@@ -4,10 +4,10 @@ import torch.nn as nn
 import torch.utils.data as Data
 from torch.utils.tensorboard import SummaryWriter
 
-BATCH_SIZE = 16
-xy = np.loadtxt('data1.csv', delimiter=',', dtype=np.float32)
-y_train = torch.from_numpy(xy[:140, :-2])
-x_train = torch.from_numpy(xy[:140, -2:])
+BATCH_SIZE = 1
+xy = np.loadtxt('dataset.csv', delimiter=',', dtype=np.float32)
+y_train = torch.from_numpy(xy[:10, :-2])
+x_train = torch.from_numpy(xy[:10, -2:])
 y_test = torch.from_numpy(xy[-20:, :-2])
 x_test = torch.from_numpy(xy[-20:, -2:])
 # print(x_train)
@@ -56,7 +56,7 @@ class Model(nn.Module):
 
 
 model = Model()
-writer = SummaryWriter(comment="GRU_MSE_Adam_LR_0.01_DATASET_140_BATCH_16_init")
+writer = SummaryWriter(comment="GRU_MSE_Adam_LR_0.01_DATASET_10_BATCH_1_init")
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 epoch_list = []
@@ -97,4 +97,4 @@ if __name__ == '__main__':
     for epoch in range(2000):
         train()
         test()
-    # torch.save(model.state_dict(), 'GRU_params.pth')
+    #torch.save(model.state_dict(), 'GRU_params.pth')

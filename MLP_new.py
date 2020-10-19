@@ -5,11 +5,11 @@ import torch.utils.data as Data
 from torch.utils.tensorboard import SummaryWriter
 
 # BATCH_SIZE = 2
-xy = np.loadtxt('data1.csv', delimiter=',', dtype=np.float32)
-y_train = torch.from_numpy(xy[:140, :-2])
-x_train = torch.from_numpy(xy[:140, -2:])
-y_test = torch.from_numpy(xy[-20:, :-2])
-x_test = torch.from_numpy(xy[-20:, -2:])
+xy = np.loadtxt('train.csv', delimiter=',', dtype=np.float32)
+y_train = torch.from_numpy(xy[:361, :-3])
+x_train = torch.from_numpy(xy[:361, -3:])
+y_test = torch.from_numpy(xy[-30:, :-3])
+x_test = torch.from_numpy(xy[-30:, -3:])
 # print(x_train)
 # print(y_train)
 # print(x_test)
@@ -17,14 +17,14 @@ x_test = torch.from_numpy(xy[-20:, -2:])
 dataset_train = Data.TensorDataset(x_train, y_train)
 dataset_test = Data.TensorDataset(x_test, y_test)
 train_loader = Data.DataLoader(dataset=dataset_train,
-                               batch_size=20,
+                               batch_size=16,
                                shuffle=True)
 test_loader = Data.DataLoader(dataset=dataset_test,
-                              batch_size=20,
+                              batch_size=30,
                               shuffle=False)
 
 model = nn.Sequential(
-    nn.Linear(2, 128),
+    nn.Linear(3, 128),
     nn.ReLU(),
     nn.Linear(128, 64),
     nn.ReLU(),
@@ -67,7 +67,7 @@ def test():
 
 
 if __name__ == '__main__':
-    writer = SummaryWriter(comment="128_64_32_8_MSE_Adam_LR_0.01_DATASET_140_BATCH_20")
+    writer = SummaryWriter(comment="128_64_32_8_MSE_Adam_LR_0.01_DATASET_60_BATCH_20")
     # model.load_state_dict(torch.load('MLP_params.pth'))
     for epoch in range(2000):
         train()
