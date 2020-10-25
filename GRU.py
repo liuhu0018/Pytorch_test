@@ -4,10 +4,10 @@ import torch.nn as nn
 import torch.utils.data as Data
 from torch.utils.tensorboard import SummaryWriter
 
-BATCH_SIZE = 1
-xy = np.loadtxt('dataset.csv', delimiter=',', dtype=np.float32)
-y_train = torch.from_numpy(xy[:10, :-2])
-x_train = torch.from_numpy(xy[:10, -2:])
+BATCH_SIZE = 16
+xy = np.loadtxt('100data.csv', delimiter=',', dtype=np.float32)
+y_train = torch.from_numpy(xy[:90, :-2])
+x_train = torch.from_numpy(xy[:90, -2:])
 y_test = torch.from_numpy(xy[-20:, :-2])
 x_test = torch.from_numpy(xy[-20:, -2:])
 # print(x_train)

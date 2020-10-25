@@ -5,11 +5,11 @@ import torch.utils.data as Data
 from torch.utils.tensorboard import SummaryWriter
 
 BATCH_SIZE = 16
-xy = np.loadtxt('train.csv', delimiter=',', dtype=np.float32)
-y_train = torch.from_numpy(xy[:360, :-3])
-x_train = torch.from_numpy(xy[:360, -3:])
-y_test = torch.from_numpy(xy[-30:, :-3])
-x_test = torch.from_numpy(xy[-30:, -3:])
+xy = np.loadtxt('100data.csv', delimiter=',', dtype=np.float32)
+y_train = torch.from_numpy(xy[:90, :-2])
+x_train = torch.from_numpy(xy[:90, -2:])
+y_test = torch.from_numpy(xy[-20:, :-2])
+x_test = torch.from_numpy(xy[-20:, -2:])
 # print(x_train)
 # print(y_train)
 # print(x_test)
@@ -20,14 +20,14 @@ train_loader = Data.DataLoader(dataset=dataset_train,
                                batch_size=BATCH_SIZE,
                                shuffle=True)
 test_loader = Data.DataLoader(dataset=dataset_test,
-                              batch_size=30,
+                              batch_size=20,
                               shuffle=False)
 
 
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
-        self.lstm = nn.LSTM(input_size=3, hidden_size=40, num_layers=1, batch_first=True)
+        self.lstm = nn.LSTM(input_size=2, hidden_size=40, num_layers=1, batch_first=True)
         self.conv1d = nn.Conv1d(40, 40, kernel_size=1)
         # self.linear1 = nn.Linear(40, 4)
         # self.relu = nn.ReLU()

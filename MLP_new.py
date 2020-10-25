@@ -5,11 +5,11 @@ import torch.utils.data as Data
 from torch.utils.tensorboard import SummaryWriter
 
 # BATCH_SIZE = 2
-xy = np.loadtxt('train.csv', delimiter=',', dtype=np.float32)
-y_train = torch.from_numpy(xy[:361, :-3])
-x_train = torch.from_numpy(xy[:361, -3:])
-y_test = torch.from_numpy(xy[-30:, :-3])
-x_test = torch.from_numpy(xy[-30:, -3:])
+xy = np.loadtxt('100data.csv', delimiter=',', dtype=np.float32)
+y_train = torch.from_numpy(xy[:90, :-2])
+x_train = torch.from_numpy(xy[:90, -2:])
+y_test = torch.from_numpy(xy[-20:, :-2])
+x_test = torch.from_numpy(xy[-20:, -2:])
 # print(x_train)
 # print(y_train)
 # print(x_test)
@@ -20,11 +20,11 @@ train_loader = Data.DataLoader(dataset=dataset_train,
                                batch_size=16,
                                shuffle=True)
 test_loader = Data.DataLoader(dataset=dataset_test,
-                              batch_size=30,
+                              batch_size=20,
                               shuffle=False)
 
 model = nn.Sequential(
-    nn.Linear(3, 128),
+    nn.Linear(2, 128),
     nn.ReLU(),
     nn.Linear(128, 64),
     nn.ReLU(),
@@ -72,4 +72,4 @@ if __name__ == '__main__':
     for epoch in range(2000):
         train()
         test()
-    torch.save(model.state_dict(), 'MLP_params.pth')
+    # torch.save(model.state_dict(), 'MLP_params.pth')
